@@ -1,0 +1,1 @@
+MD5 is used for the sole purpose of detecting a change in builder functions so we toggle the cache recomputation.

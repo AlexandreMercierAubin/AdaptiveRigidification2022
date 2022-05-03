@@ -1,0 +1,1 @@
+This is a place to output videos. Commiting the file so the folder is created when installing the repo.

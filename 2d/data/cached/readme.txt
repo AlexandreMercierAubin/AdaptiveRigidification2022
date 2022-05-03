@@ -1,0 +1,1 @@
+This is where we cache some scene information so we don't have to recompute them every time.

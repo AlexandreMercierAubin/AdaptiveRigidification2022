@@ -1,0 +1,12 @@
+[submodule "lib/svgmesh/gptoolbox"]
+	path = lib/svgmesh/gptoolbox
+	url = https://github.com/alecjacobson/gptoolbox.git
+[submodule "lib/TetWild"]
+	path = lib/TetWild
+	url = https://github.com/Yixin-Hu/TetWild
+[submodule "lib/Stop-motion-OBJ"]
+	path = lib/Stop-motion-OBJ
+	url = https://github.com/neverhood311/Stop-motion-OBJ.git
+[submodule "lib/gptoolbox"]
+	path = lib/gptoolbox
+	url = https://github.com/alecjacobson/gptoolbox.git

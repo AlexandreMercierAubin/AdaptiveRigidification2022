@@ -1,0 +1,1 @@
+This is where the cached data lives. Delete them for a full reset or use the corresponding in-app settings.

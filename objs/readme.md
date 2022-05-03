@@ -1,0 +1,1 @@
+This is a place to output objs/ply of the scene which can then be rendered in blender. Note that I use a modified version of gptoolbox to also export colors. 
