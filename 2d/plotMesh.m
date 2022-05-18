@@ -230,7 +230,11 @@ function singleUseFigures = plotMesh( h, mesh2d, settings, singleUseFigures, cac
             end
         end
         
-        if settings.DrawEDots && ~isempty(mesh2d.RigidificationValues)
+        if settings.DrawEDots && ~isempty(mesh2d.RigidificationValues)           
+            Fa = mesh2d.B * mesh2d.p;
+            Fb = mesh2d.B * cache.oldp; % not so efficient, these would have been previously computed
+            
+            EDotNorms = mexEdiffNorm2D( Fa, Fb, h );
             
             for t = 1:size(mesh2d.t)
                 i = mesh2d.t(t, 1);
@@ -240,7 +244,9 @@ function singleUseFigures = plotMesh( h, mesh2d, settings, singleUseFigures, cac
                 center(:,t) = mesh2d.p(i * 2 - 1:i * 2) + mesh2d.p(j * 2 - 1:j * 2) + mesh2d.p(k * 2 - 1:k * 2);
                 center(:,t) = center(:,t) / 3;
             end
-            color = max(min(1-mesh2d.RigidificationValues(:, 1),1),0); %norm(mesh2d.B(:,8*2-1:8*2)*mesh2d.p0(8*2-1:8*2),'fro')
+            color = -log(EDotNorms); %norm(mesh2d.B(:,8*2-1:8*2)*mesh2d.p0(8*2-1:8*2),'fro')
+            color = color./8;
+            color = max(min(color,1),0);
             f = scatter(center(1,:), center(2,:), 5, [color,color,color], 'filled');
             singleUseFigures = [singleUseFigures,f];
             

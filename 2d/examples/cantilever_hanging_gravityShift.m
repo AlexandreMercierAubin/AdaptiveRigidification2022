@@ -13,10 +13,11 @@ material = TriangleMaterial(rho, mu, lambda, alpha0, alpha1);
 resetMesh = true;
 mesh2d =  fetchPoly2D('cantileverp05',resetMesh, material);
 %mesh = AdaptiveMesh(loadMeshFromPOLY('data/cantileverp3',material));
+px = mesh2d.p(1:2:end);
+maxx = max( px );
+mesh2d.pin( find( px > maxx - 0.1 ) );
+
 mesh2d.setRigidTransform( 90, [0,0] );
-% Awkward to pin based on index numbers... but works here!  Could also
-% consider pinning DOFs based on if they fall within a region.
-mesh2d.pin(mesh2d.N-5:mesh2d.N);
 
 mesh2d = AdaptiveMesh(mesh2d);
 
