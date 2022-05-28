@@ -63,7 +63,7 @@ meshes3 = AdaptiveMesh3D(baseMesh);
 rigidificator = EDot3DMexRigidificator();
 rigidificator.RigidificationThreshold = 7e-6;
 rigidificator.ElastificationThreshold = 7e-5; 
-integrator = BackwardEuler3D();
+integrator = LDLBackwardEuler3D();
 integrator.setComplianceAndBaumgarteFromERPandCFM(h,0.05, 1e-3);
 integrator.Gravity = -8;
 

@@ -31,7 +31,7 @@ rigidificator.RigidificationThreshold = 1e-4;
 rigidificator.ElastificationThreshold = 5e-3;% 5e-1; 
 rigidificator.FrameCount = 5;
 
-integrator = BackwardEuler3D();
+integrator = LDLBackwardEuler3D();
 integrator.Compliance = 0.0;
 integrator.Gravity = 0;
 

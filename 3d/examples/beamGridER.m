@@ -62,7 +62,7 @@ rigidificators{testi} = EDot3DMexRigidificator();
 rigidificators{testi}.RigidificationThreshold = 0;
 rigidificators{testi}.ElastificationThreshold = 0; 
 
-integrator = BackwardEuler3D();
+integrator = LDLBackwardEuler3D();
 integrator.setComplianceAndBaumgarteFromERPandCFM(h,0.1, 1e-3 );
 
 energyModel = NeoHookean3DEnergy();

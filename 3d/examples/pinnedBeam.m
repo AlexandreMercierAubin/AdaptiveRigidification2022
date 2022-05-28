@@ -29,7 +29,7 @@ rigidificator.RigidificationThreshold = 1e-8;
 rigidificator.ElastificationThreshold = 1e-7; 
 rigidificator.FrameCount = 3;
 
-integrator = BackwardEuler3D();
+integrator = LDLBackwardEuler3D();
 integrator.Compliance = 0.0;
 
 energyModel = NeoHookean3DEnergy();

@@ -41,7 +41,7 @@ meshes = AdaptiveMesh3D(baseMesh);
 rigidificator = EDot3DMexRigidificator();
 rigidificator.RigidificationThreshold = 1e-3;
 rigidificator.ElastificationThreshold = 1e-1; 
-integrator = BackwardEuler3D();
+integrator = LDLBackwardEuler3D();
 integrator.setComplianceAndBaumgarteFromERPandCFM(h,0.5, 1e-6 );
 
 energyModel = StVenantKirchoff3DEnergy();

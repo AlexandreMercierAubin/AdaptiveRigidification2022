@@ -95,7 +95,7 @@ meshes5232 = AdaptiveMesh3D(baseMesh5232);
 rigidificator = EDot3DMexRigidificator();
 rigidificator.RigidificationThreshold = 1e-7;
 rigidificator.ElastificationThreshold = 3e-1; 
-integrator = BackwardEuler3D();
+integrator = LDLBackwardEuler3D();
 integrator.setComplianceAndBaumgarteFromERPandCFM(h,0.3, 1e-3 );
 
 energyModel = NeoHookean3DEnergy();

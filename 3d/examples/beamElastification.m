@@ -68,7 +68,7 @@ notUsed.ElastificationThreshold = 1e-3;
 
 baseMesh.setRigidTransform([0,0,0],[0,dist*4,0]);
 
-integrator = BackwardEuler3D();
+integrator = LDLBackwardEuler3D();
 integrator.setComplianceAndBaumgarteFromERPandCFM(h,0.3, 1e-3 );
 
 energyModel = NeoHookean3DEnergy();
