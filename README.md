@@ -40,7 +40,21 @@ savepath();
 mexAdaptiveRigidification();
 ```
 By now you should be all set.
+
+## Running scenes
 Try running examples in 2d/examples or 3d/examples.
+For instance while being in the root folder, you could open 2d/examples/cantilever_pinned.m and click play or simply call cantilever_pinned in the command prompt.
+Why don't you try creating your own scene and play with it?
 
 ### FAQ
 If you get a signed-distance error when running the 3D code, then you probably did not set up the compiled mex from gptoolbox properly.
+
+Feel free to contact me if you find bugs and to send pull requests with fixes. 
+We likewise have a private repository that we maintain with new research. 
+Contact us to gain access to the private repository if you wish to collaborate with us on our newest/most exciting stuff.
+Please cite us when using this simulator in your own research.
+
+Special thanks to the collaborators Alexander Winter, David IW Levin and Paul Kry who participated in creating this simulator.
+This simulator is now used by many students of the McGill physics-based animation lab .
+We wish to keep expanding it over time.
+
