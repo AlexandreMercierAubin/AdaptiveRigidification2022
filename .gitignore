@@ -18,6 +18,7 @@ objs/*
 *.blend
 *.blend1
 *build*
+!*Builder*
 *.mat
 *.csv
 2d/data/cached/*

@@ -255,40 +255,15 @@ classdef Mesh < handle
             
             obj.updateMaterials(obj.materialIndex, obj.materials);
             
-            % Rebuild the triangle adjacency matrix and graph... this is
-            % not very efficient... 
-            obj.AdjagencyMatrix = sparse(size(obj.t, 1));
-            obj.TrianglesPerParticle = cell(obj.N, 1, 1);
-            for i = 1:1:size(obj.t, 1)
-                build(i);
-            end
-            % could not find a better way to vectorize this but if there
-            % is, its probably faster.
-            function build(i)
-                % Given triangle index i, this function will figure out
-                % what triangles are adjacent, and will set the adjacency
-                % matrix entries accordingly.
-                inds = ismember(1:obj.N, obj.t(i, :));
-                obj.TrianglesPerParticle(inds) = cellfun(@(x) [x, i], obj.TrianglesPerParticle(inds), 'UniformOutput', false);
-                % Check all triangles with higher index, to see which
-                % indices are shared with our triangle... and if exactly
-                % two are shared then we share an edge with that triangle!
-                % That is, we've found the adjacent triangles.
-                matching = find( sum( ismember( obj.t(i+1:size(obj.t, 1), :), obj.t(i,:))' ) == 2 ) + i;
-                obj.AdjagencyMatrix(i, matching) = 1;
-                obj.AdjagencyMatrix(matching, i) = 1; 
-            end
-            obj.Graph = graph(obj.AdjagencyMatrix);
+            obj.AdjagencyMatrix = blkdiag(obj.AdjagencyMatrix,mesh.AdjagencyMatrix);
+            obj.TrianglesPerParticle = [obj.TrianglesPerParticle;mesh.TrianglesPerParticle];
                        
             obj.activeDOFs = 1:2 * obj.N;
             obj.ActiveBRows = 1:size(obj.t, 1) * 4;
             
-            % silly to recompute, but whatever... 
-            obj.B = obj.computeB2D();
+            obj.B = blkdiag(obj.B,mesh.B);
             obj.Bii = obj.B(:,obj.unpinnedDOFs);
             obj.lagrangeMults = zeros(size(obj.B, 1), 1);
-
-            %updateCf(obj);
             
             obj.elBm = [ obj.el(:).Bm ];
             obj.elA = [ obj.el(:).area ];
@@ -374,26 +349,7 @@ classdef Mesh < handle
             psi = mesh.elMu .* sum( E.*E, 1 ) + mesh.elLambda/2 .* (E(1,:).*E(4,:)).^2;
             V = sum( mesh.elA .* psi );
         end
-        
-%         function updateCf(mesh)
-%         % Deprectated... use mCSTVK instead
-%         % Might be interesting to keep this in comments for ease of
-%         % creating a new energy??
-%             Fs = sym('Fs', [2, 2],'real');  
-%             E = 1 / 2 * (Fs' * Fs - eye(2));
-%             mus = sym('mus','real');
-%             lambdas = sym('lambdas','real');
-%             P = Fs * (2 * mus * E + lambdas * trace(E) * eye(2));
-%             Pr = reshape(P, 4, 1);
-%             Fr = reshape(Fs, 1, 4);
-% 
-%             Cs = sym(zeros(4, 4));
-%             for j = 1:4
-%                 Cs(:, j) = diff(Pr, Fr(j));
-%             end
-%             mesh.Cf = matlabFunction(Cs);%, mus, lambdas
-%         end
-        
+         
         function B = computeB2D(mesh2d)
             %COMPUTEB Slow but only precomputation. Could probably be vectorized.
             %Not a huge bottleneck for gigantic meshes (adjagency matrix is worse)

@@ -326,56 +326,21 @@ classdef Mesh3D < handle
             obj.faces = [obj.faces;mesh.faces + N1]; 
             obj.facesTriList = [obj.facesTriList;mesh.facesTriList + numTets1]; 
 
-            % Rebuild the tet adjacency matrix and graph... this is
-            % not very efficient... 
-            obj.AdjagencyMatrix = sparse(size(obj.t, 1));
-            obj.TetsPerParticle = cell(obj.N, 1, 1);
-            for i = 1:1:size(obj.t, 1)
-                build(i);
-            end
-            % could not find a better way to vectorize this but if there
-            % is, its probably faster.
-            function build(i)
-                if size(obj.t,2) == 3
-                    inds = ismember(1:obj.N, obj.t(i, :));
-                    obj.TetsPerParticle(inds) = cellfun(@(x) [x, i], obj.TetsPerParticle(inds), 'UniformOutput', false);
-                    % Check all triangles with higher index, to see which
-                    % indices are shared with our triangle... and if exactly
-                    % two are shared then we share an edge with that triangle!
-                    % That is, we've found the adjacent triangles.
-                    matching = find(sum(ismember(obj.t(i + 1:size(obj.t, 1), :), obj.t(i, :)),2) == 2) + i;
-                
-                else
-                    inds = ismember(1:obj.N, obj.t(i, :));
-
-                    obj.TetsPerParticle(inds) = cellfun(@(x) [x, i], obj.TetsPerParticle(inds), 'UniformOutput', false);
-
-                    matching = find(sum(ismember(obj.t(i + 1:size(obj.t, 1), :), obj.t(i, :)),2) == 3) + i;
-                end
-                obj.AdjagencyMatrix(i, matching) = 1;
-                obj.AdjagencyMatrix(matching, i) = 1; 
-            end
-            obj.Graph = graph(obj.AdjagencyMatrix);
+            obj.AdjagencyMatrix = blkdiag(obj.AdjagencyMatrix,mesh.AdjagencyMatrix);
+            obj.TetsPerParticle = [obj.TetsPerParticle;mesh.TetsPerParticle];
                        
             obj.activeDOFs = 1:3 * obj.N;
             obj.ActiveBRows = 1:size(obj.t, 1) * 9;
             
             % silly to recompute, but whatever... 
             V = reshape(obj.p, 3, size(obj.p, 1) / 3)';
-            if size(obj.t,2) == 3
-                obj.B = computeB3D(V, obj.t);
-                obj.Bt = obj.B';
-                obj.Bii = obj.B(:,obj.unpinnedDOFs);
-                obj.initialB = obj.B;
-                obj.dphidx = linear_tri3dmesh_dphi_dX(V, obj.t);
-            else
-                obj.B = computeB3D(V, obj.t);
-                obj.Bt = sparse(obj.B');
-            end
+            obj.B = blkdiag(obj.B,mesh.B);
+            obj.Bt = obj.B';
+            obj.Bii = obj.B(:,obj.unpinnedDOFs);
+
             obj.lagrangeMults = zeros(size(obj.B, 1), 1);
             obj.elV = volume(V,obj.t);
-
-            
+  
             numMat1 = numel(obj.materials);
             obj.updateMaterials([ obj.materialIndex; mesh.materialIndex + numMat1 ], [ obj.materials, mesh.materials ])
             
