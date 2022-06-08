@@ -139,32 +139,7 @@ classdef Mesh < handle
             end
             
             obj.updateMaterials(attributes,[obj.materials, defaultMaterial]);
-            obj.AdjagencyMatrix = sparse(size(t, 1));
-            obj.TrianglesPerParticle = cell(N, 1, 1);
-            
-            for i = 1:1:size(t, 1)
-                build(i);
-            end
-            
-            % could not find a better way to vectorize this but if there
-            % is, its probably faster.
-            function build(i)
-                % Given triangle index i, this function will figure out
-                % what triangles are adjacent, and will set the adjacency
-                % matrix entries accordingly.
-                inds = ismember(1:N, t(i, :));
-                obj.TrianglesPerParticle(inds) = cellfun(@(x) [x, i], obj.TrianglesPerParticle(inds), 'UniformOutput', false);
-                % Check all triangles with higher index, to see which
-                % indices are shared with our triangle... and if exactly
-                % two are shared then we share an edge with that triangle!
-                % That is, we've found the adjacent triangles.
-                matching = find( sum( ismember( t(i+1:size(t, 1), :), t(i,:))' ) == 2 ) + i;
-%                matching = find( sum( ismember( t(i+1:size(t, 1), :), t(i,:))' ) >= 1 ) + i;
-                obj.AdjagencyMatrix(i, matching) = 1;
-                obj.AdjagencyMatrix(matching, i) = 1; 
-            end
-            
-            obj.Graph = graph(obj.AdjagencyMatrix);
+            [obj.AdjagencyMatrix,obj.TrianglesPerParticle,obj.Graph] = elementAdjacencyMatrix(obj.t,N);
             
             obj.pinned = zeros(N, 1);   % flags pinned indices
             obj.pinnedInds = [];        % list of pinned node IDs
