@@ -15,6 +15,7 @@
 #include "mex.h"
 #include "blas.h"
 #include <algorithm>
+#include <cmath>
  
 /* 
  * The gateway function
@@ -105,6 +106,9 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] ) {
             }
             Dii = JAinvJT[ i + i*nContactsx3 ];
             lambda[i] = ( lambda[i]*Dii - b[i] - Jcdv ) / Dii; // no compliance for friction!
+            if (std::isnan(lambda[i])) {
+                lambda[i] = 0;
+            }
             lambda[i] = std::min( std::max(lambda[i], -ub), ub);
         
             // second tangent
@@ -115,6 +119,9 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] ) {
             }
             Dii = JAinvJT[ i + i*nContactsx3 ];
             lambda[i] = ( lambda[i]*Dii - b[i] - Jcdv ) / Dii; // no compliance for friction!
+            if (std::isnan(lambda[i])) {
+                lambda[i] = 0;
+            }
             lambda[i] = std::min( std::max(lambda[i], -ub), ub);
         }
     }

@@ -80,7 +80,7 @@ classdef LDLBackwardEuler3D < Integrator
                 deltav = zeros( mesh.N*3, 1);
             end
             
-            if ( isempty(cInfo) )
+            if ( isempty(cInfo) || numel(ii)==0 )
                 deltav(ii) = extDv;
             else            
                 Lrhs = Jc(:, ii) * (v(ii)+extDv); % lower right hand side           
