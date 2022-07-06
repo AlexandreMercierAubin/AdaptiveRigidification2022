@@ -18,7 +18,7 @@
 #include "mex.h"
 #include "blas.h"
 #include <algorithm>
- 
+#include <cmath>
 /* 
  * The gateway function
  * ( iterations, lambda, deltav, T, Dii, b, JcT, mu, compliance )
@@ -145,6 +145,9 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] ) {
             // Compute lambda update
             oldLambda = lambda[i];
             lambda[i] = ( lambda[i]*Dii[i] - b[i] - Jcdv ) / ( Dii[i] + compliance );
+            if (std::isnan(lambda[i])) {
+                lambda[i] = 0;
+            }
             lambda[i] = std::max(lambda[i], 0.0);
 
             // Compute deltav update
@@ -185,6 +188,9 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] ) {
             // Compute lambda update
             oldLambda = lambda[i];
             lambda[i] = ( lambda[i]*Dii[i] - b[i] - Jcdv ) / Dii[i]; // no compliance for friction!
+            if (std::isnan(lambda[i])) {
+                lambda[i] = 0;
+            }
             lambda[i] = std::min( std::max(lambda[i], -ub), ub);
 
             // Compute deltav update

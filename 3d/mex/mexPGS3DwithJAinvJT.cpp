@@ -88,6 +88,9 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] ) {
             }
             Dii = JAinvJT[ i + i*nContactsx3 ];
             lambda[i] = ( lambda[i]*Dii - b[i] - Jcdv ) / ( Dii + compliance );
+            if (std::isnan(lambda[i])) {
+                lambda[i] = 0;
+            }
             lambda[i] = std::max(lambda[i], 0.0);
 
             // if no friction skip tangents
