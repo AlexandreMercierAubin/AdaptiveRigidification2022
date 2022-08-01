@@ -23,12 +23,10 @@ Some matlab addons are needed or recommended such as Deep Learning Toolbox, Comp
 ### Installation
 #### run the following commands in a command prompt
 ```
-git submodule init 
-git submodule update --recursive
-#if recursive fails then manually go to lib/gptoolbox/mex and build
-mkdir build
-cd build
-cmake .. 
+git submodule update --init --recursive
+#if the recursive update fails then manually go to lib/gptoolbox/mex and build
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --target install --config Release
 ```
 
 #### run the following commands in the matlab console
