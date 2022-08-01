@@ -12,7 +12,6 @@ mesh2d = loadMeshFromPOLY('2d/data/cantileverP05', material)
 mesha = AdaptiveMesh(mesh2d);
 
 settings = SimulationSettings();
-settings.DrawTimings = 1;
 settings.DrawContact = 0;
 % settings.DrawLambdas = 1;
 settings.CamPadding(3) = 3; % L R B T
@@ -25,7 +24,7 @@ settings.RunRightAway = false;
 %settings.PCGiterations = 100;
 settings.SceneName = "littlePlanetHD";
 %settings.PlotPhiHist = 1;
-settings.recomputeCacheAinv = true;
+% settings.recomputeCacheAinv = true;
 
 rigid = EDotMexRigidificator();
 rigid.FrameCount = 3;

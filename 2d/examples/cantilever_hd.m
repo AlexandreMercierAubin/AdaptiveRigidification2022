@@ -35,13 +35,13 @@ material = [TriangleMaterial(rho, mu, lambda, alpha0, alpha1)];
 
 settings = SimulationSettings();
 
-settings.MakeVideo = 1;
+% settings.MakeVideo = 1;
 settings.SceneName = 'cantilever_hd';
 % settings.DrawTimings = 1;
 % settings.PrintTimings = 0;
 settings.CamPadding(3) = 3;
 % settings.plotTriImplicitRigidificationElastification = 1;
-% settings.PlotEDotHist = 1;
+settings.PlotEDotHist = 1;
 settings.RecordFramePositionInTD = true;
 % settings.DrawDv = true;
 % settings.DrawApproxDv = true;

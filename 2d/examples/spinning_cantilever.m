@@ -11,7 +11,7 @@ alpha1 = 0.1; % Rayleigh factor on K
 material = TriangleMaterial( rho, mu, lambda, alpha0, alpha1 );
 
 settings = SimulationSettings();
-settings.DrawTimings = 1;
+% settings.DrawTimings = 1;
 settings.SceneName = "spinningCantilever";
 
 resetMesh = true;

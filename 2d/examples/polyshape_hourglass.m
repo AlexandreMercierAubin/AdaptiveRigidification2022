@@ -12,9 +12,9 @@ material = TriangleMaterial( rho, mu, lambda, alpha0, alpha1 );
 
 settings = SimulationSettings();
 settings.CamPadding(3) = 3; % L R B T
-settings.MakeVideo = 1;
+% settings.MakeVideo = 1;
 settings.SceneName = 'hourglass';
-settings.FramesToRecord = 500;
+% settings.FramesToRecord = 500;
 settings.PGSiterations = 100;
 
 resetMesh = false;

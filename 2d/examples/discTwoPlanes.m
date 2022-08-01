@@ -20,7 +20,7 @@ settings.WarmStartEnabled = true;
 settings.DrawLambdas = true;
 
 settings.CamPadding = [ 1 1 1 1 ]; % L R B T
-settings.RunRightAway = false;
+% settings.RunRightAway = false;
 settings.SceneName = "discTwoPlanes";
 settings.recomputeCacheAinv = true;
 settings.warmStartFromQuickSolve= false;

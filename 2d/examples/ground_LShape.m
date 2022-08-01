@@ -10,7 +10,8 @@ alpha0 = 0.0003; % a larger alpha 0 will fight against contact stabilizaiton :(
 alpha1 = 0.1;
 strainUpperBound = 1.2;
 strainLowerBound = 0.8;
-material = TriangleMaterial( rho, mu, lambda, alpha0, alpha1,[0.5,0.5,0.5], strainUpperBound, strainLowerBound);
+materialColor = [0.5,0.5,0.5];
+material = TriangleMaterial( rho, mu, lambda, alpha0, alpha1,materialColor, strainUpperBound, strainLowerBound);
 
 settings = SimulationSettings();
 % settings.MakeVideo = 1;

@@ -3,7 +3,7 @@ clear all;
 
 h = 0.01; % time step
 
-rho = 1;
+rho = 0.5;
 nu = 0.4; % Poisson ratio: close to 0.5 for rubber
 E = 5e3; % Young's modulus: 0.01e9 approximate for rubber
 [ mu, lambda ] = toLame( nu, E );
@@ -15,12 +15,7 @@ settings = SimulationSettings();
 settings.DrawTimings = 1;
 settings.CamPadding(3) = 3;
 settings.SceneName = 'ground_cantilever_mega';
-%settings.MakeVideo = true;
-%settings.DrawEdges = true;
-%settings.DrawLambdas = 1;
 
-% settings.quicksolveSimulation = true;
-settings.PCGiterations = 1;
 settings.PGSiterations = 100;
 settings.recomputeCacheAinv = true;
 

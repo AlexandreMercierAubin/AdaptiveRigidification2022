@@ -17,7 +17,7 @@ alpha1 = 0.03;
 material = TriangleMaterial( rho, mu, lambda, alpha0, alpha1);
 
 settings = SimulationSettings();
-settings.MakeVideo = 1;
+% settings.MakeVideo = 1;
 %settings.FramesToRecord = 200;
 settings.DrawTimings = 0;
 settings.DrawLambdas = 0;
@@ -25,7 +25,7 @@ settings.PGSiterations = 20;
 settings.RunRightAway = true;
 settings.CamPadding = [0.5 0.5 0 -1.75 ];
 settings.PlotEDotHist = true;
-settings.InitialWindowPosition = [0,0,1920,1080];
+% settings.InitialWindowPosition = [0,0,1920,1080];
 settings.SceneName = 'IShape';
 %settings.DrawApproxEDots = true;
 %settings.DrawApproxDv = true;
@@ -61,21 +61,6 @@ rigid.Preconditionner = 'ICHOLICT';
 
 % Note clear that the approx rigificator (or the memory rigidificator) can
 % be made to work in short order.  Keep with the vanilla option above.
-
-% rigid = EDotApproxRigidificator();
-% rigid.RigidificationThreshold = 1e-4;
-% rigid.Preconditionner = 'ICHOL';
-% rigid.FrameCount = 5; %number of frames before rigidifying.
-% rigid.Permutation = 'DISSECT';
-
-% rigid = EDotApproxRigidificator();
-% rigid.RigidificationThreshold = 1e-4;
-% rigid.Preconditionner = 'ICHOL';
-% rigid.FrameCount = 5; %number of frames before rigidifying.
-% % rigid.Permutation = 'COLAMD';
-% rigid.Permutation = 'DISSECT';
-% % rigid.Permutation = 'COLPERM';
-
 integrator = LDLBackwardEuler();
 ERP = 0.5;
 CFM = 0.1;

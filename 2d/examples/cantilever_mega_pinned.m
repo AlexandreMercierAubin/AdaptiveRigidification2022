@@ -9,23 +9,11 @@ E = 1e5; % Young's modulus: 0.01e9 approximate for rubber
 alpha0 = 0; % Rayleigh factor on M
 alpha1 = 0.01; % Rayleigh factor on K
 
-% Set damping from damping factor
-% compute first modal frequency via eigs
-% where omega0 is sqrt(D(1,1))
-% (set a breakpoint in LDLBackwardEuler to harvest this)
-% Mii=M(ii,ii);Kii=(K(ii,ii)+K(ii,ii)')/2;
-% [V,D] = eigs(Kii,Mii,7,'smallestabs'); 
-% omeag0 = sqrt(-D(1,1))
-% If unpinned 2D then use D(4,4)
-% If unpinned 3D then use D(7,7)
 omega0 = 6.6; % divide by 2pi to get period
 df = 0.2;  % zero is undamped, 1 is critical
 % set alpha1 from alpha0
 alpha0 = 0;
 alpha1 = (2*df-alpha0/omega0)/omega0;
-% set alpha0 from alpha1
-% alpha1 = 0;
-% alpha0 = (2*df-alpha1*omega0)*omega0;
 
 materials = TriangleMaterial(rho, mu, lambda, alpha0, alpha1);
 
@@ -51,10 +39,8 @@ mesh2d.pin(inds(abs(mesh2d.p(1:2:end) - min(mesh2d.p(1:2:end))) < 1e-2));
 mesha = AdaptiveMesh(mesh2d);
 
 rigid = EDotMexRigidificator();
-% rigid = EDotVectorRigidificator();
 rigid.RigidificationThreshold = 1e-6;
 rigid.ElastificationThreshold = 1e-0;
-% rigid.ScaleByMaxEdgeLength = 1;
 
 be = LDLBackwardEuler();
 be.Gravity = g;
