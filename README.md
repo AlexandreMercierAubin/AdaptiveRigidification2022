@@ -9,7 +9,7 @@ GPtoolbox might require:
 	embree https://github.com/embree/embree
 	libigl https://github.com/libigl/libigl
 	boost 1.48 https://www.boost.org/users/history/version_1_48_0.html
-	to be detected automatically on windows use the path C:\local\boost_1_48_0\boost\*
+	to be detected automatically on windows use the path C:\Program Files\boost\boost_*
 Tip: install visual studio before cmake so its compiler is automatically added to cmake
 
 GpToolBox is already included in the repo as a subrepo. Simply call `git submodule update --init --recursive`.
