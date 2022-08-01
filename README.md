@@ -26,7 +26,7 @@ Some matlab addons are needed or recommended such as Deep Learning Toolbox, Comp
 git submodule update --init --recursive
 #if the recursive update fails then manually go to lib/gptoolbox/mex and build
 cd lib/gptoolbox/mex
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DWITH_ELTOPO=false
 cmake --build build --target install --config Release
 ```
 
