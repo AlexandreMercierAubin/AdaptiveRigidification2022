@@ -59,10 +59,8 @@ mesh2d.pin( find( px < minx + 0.1 ) );
 mesha = AdaptiveMesh( mesh2d );
 
 rigid = EDotMexRigidificator();
-
 rigid.RigidificationThreshold = 1e-6;
 rigid.ElastificationThreshold = 1e-5;
-rigid.ScaleByMaxEdgeLength = 0;
 
 integrator = LDLBackwardEuler();
 integrator.Gravity = gravity*0.5;

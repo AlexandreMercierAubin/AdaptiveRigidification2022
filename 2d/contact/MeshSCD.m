@@ -113,7 +113,7 @@ classdef MeshSCD < ContactFinder
             phi = inf( numContacts, 1 );
             m2ContactVertIndex1 = -ones( numContacts, 1 );  % index of first vertex of edge on mesh 2
             m2ContactVertIndex2 = -ones( numContacts, 1 );  % index of second vertex of edge on mesh 2
-            
+            m1ContactVertIndex = bes1edges(in,1);
 
             % check all "in" contact points of boundary edge set 1 with all
             % boundary edges of boundary edge set 2.  This would be much
@@ -135,8 +135,11 @@ classdef MeshSCD < ContactFinder
             %polyshape does not filter exact 0 dist contacts so we do
             isZeroInterpenetration = phi < obj.epsilon;
             phi(isZeroInterpenetration) = [];
+            m1ContactPoints(isZeroInterpenetration,:) = [];
+            m1ContactVertIndex(isZeroInterpenetration) = [];
             m2ContactVertIndex1(isZeroInterpenetration) = [];
             m2ContactVertIndex2(isZeroInterpenetration) = [];
+            numContacts = numel(m2ContactVertIndex1);
 
             % these interpenetraiton depths must be negative for
             % baumgarte to work
@@ -145,7 +148,10 @@ classdef MeshSCD < ContactFinder
             % now for each in point, find the alpha, normal, tangent
             v1 = [ mesh.p(m2ContactVertIndex1*2-1), mesh.p(m2ContactVertIndex1*2) ];
             v2 = [ mesh.p(m2ContactVertIndex2*2-1), mesh.p(m2ContactVertIndex2*2) ];
-            alphas = (sum((m1ContactPoints-v1).*(v2-v1),2) ./ sum((v2-v1).*(v2-v1),2));
+            direction = v2-v1;
+            numerator = sum((m1ContactPoints-v1).*(direction),2);
+            denominator = sum((direction).*(direction),2);
+            alphas = ( numerator./ denominator);
 %             assert(~any(alphas>1));
 %             assert(~any(alphas<0));
 %             if any(alphas>1)
@@ -171,7 +177,6 @@ classdef MeshSCD < ContactFinder
 
             % Here, indices are of edge corresponding to mesh1 boundary edges
             % and recall the point was taken as the first index of the edge!
-            m1ContactVertIndex = bes1edges(in,1);
             indices = [ m1ContactVertIndex, m2ContactVertIndex1, m2ContactVertIndex2 ];
             
             row = 1;
