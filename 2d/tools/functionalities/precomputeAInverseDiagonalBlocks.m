@@ -1,16 +1,17 @@
-function precomputeAInverseDiagonalBlocks( cache, mesh, h )
+function precomputeAInverseDiagonalBlocks( cache, mesh, h, energyModel)
     % precomputeAInverseDiagonalBlocks Builds the rest pose A matrix and 
     % precomputes just the diagonal blocks of the inverse matrix. 
     
     bigB = mesh.B;
     F = mesh.B * mesh.p0;
-    
-    [ii, jj, CblockVals, ~] = mexComputeSTVKGradHess2D( F, mesh.elA, mesh.elMu, mesh.elLambda );
-    bigC = sparse( ii, jj, CblockVals );
+
+    energyModel.computeEnergy(mesh, F);  
+    bigC = energyModel.derivative2HessianC;
     
     a1 = [ mesh.materials(mesh.materialIndex(:)).alpha1 ];
     alpha1 = reshape( repmat( a1, 4, 1 ), [], 1 );
-    bigAlpha1 = sparse( 1:numel(alpha1), 1:numel(alpha1), alpha1 );
+    nAlpha = numel(alpha1);
+    bigAlpha1 = sparse( [1:nAlpha]', [1:nAlpha]', alpha1 ,nAlpha, nAlpha);
         
     K  = sparse(bigB' * bigC * bigB);
     Kd = sparse(bigB' * (bigAlpha1 * bigC) * bigB);

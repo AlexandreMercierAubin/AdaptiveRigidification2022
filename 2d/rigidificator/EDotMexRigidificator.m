@@ -97,8 +97,9 @@ classdef EDotMexRigidificator < Rigidificator
                                    
             numRigid = 0;
             if frame >= obj.FrameCount || settings.FirstFrameRigidification
-%                 trisToElastify(mesh2d.pinnedTris) = true;%quick test to
-%                 block pinned tris rigidification
+                if obj.PreventPinnedRigidification 
+                    trisToElastify(mesh2d.pinnedTris) = true;
+                end
                 if ~isempty(mesh2D.animationInds)                
                     pinned = mesh2D.pinned;
                     pinned(mesh2D.animationInds) = true;

@@ -7,6 +7,7 @@ classdef Rigidificator < handle
        FrameCount
        Preconditionner = 'ICHOLICT';
        Permutation = 'DISSECT';
+       PreventPinnedRigidification = false;
     end
     
     methods

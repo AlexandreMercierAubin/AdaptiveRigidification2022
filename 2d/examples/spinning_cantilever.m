@@ -2,12 +2,12 @@ clear;
 
 h = 0.01; %time step
 
-rho = 40;
+rho = 20;
 nu = 0.4; % Poisson ratio: close to 0.5 for rubber
 E = 2e4; % Young's modulus: 0.01e9 approximate for rubber
 [ mu, lambda ] = toLame( nu, E );
-alpha0 = 0.1; % Rayleigh factor on M
-alpha1 = 0.1; % Rayleigh factor on K
+alpha0 = 0.0001; % Rayleigh factor on M
+alpha1 = 0.001; % Rayleigh factor on K
 material = TriangleMaterial( rho, mu, lambda, alpha0, alpha1 );
 
 settings = SimulationSettings();
@@ -19,15 +19,15 @@ scale = [1,1];
 rot = 0;
 mesh1 = AdaptiveMesh(fetchPoly2D('cantileverP2',resetMesh, material, scale, rot, settings)); %twoTriSym, barP2, SixTri
 
-mesh1.setRigidMotion( 3, [0,0] ); 
+mesh1.setRigidMotion( 2, [0,0] ); 
 mesh2 = AdaptiveMesh(mesh1);
 
 be = LDLBackwardEuler();
 be.Gravity = 0;
 
 rigid = EDiffMexRigidificator();
-rigid.RigidificationThreshold = 1e-4;
-rigid.ElastificationThreshold = 1e-3;
+rigid.RigidificationThreshold = 1e-3;
+rigid.ElastificationThreshold = 1e-1;
 rigid.Preconditionner = "ICHOL";
 
 % run a comparison

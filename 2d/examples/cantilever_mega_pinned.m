@@ -40,7 +40,7 @@ mesha = AdaptiveMesh(mesh2d);
 
 rigid = EDotMexRigidificator();
 rigid.RigidificationThreshold = 1e-6;
-rigid.ElastificationThreshold = 1e-0;
+rigid.ElastificationThreshold = 1e-4;
 
 be = LDLBackwardEuler();
 be.Gravity = g;

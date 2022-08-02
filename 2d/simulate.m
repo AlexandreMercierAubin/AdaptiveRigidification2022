@@ -1,4 +1,4 @@
-function [td] = simulate( meshes, integrators, h, settings, rigidificators, contactFinders, meshContactFinder, animationScripter)
+function [td] = simulate( meshes, integrators, h, settings, rigidificators, contactFinders, meshContactFinder, animationScripter, energyModel)
     %SIMULATE Runs a single or multiple simulations and displays them into
     %a figure
     %   Each parameter can either be specified as itself or as a cell array
@@ -28,7 +28,10 @@ function [td] = simulate( meshes, integrators, h, settings, rigidificators, cont
     % Note cyan variable colouring indicates variables used within several
     % functions defined within this function, i.e., the scope spans
     % multiple functions!
-    
+    if nargin < 9
+        energyModel = NeoHookeanEnergy();
+    end
+
     if nargin < 8
         animationScripter = {NullAnimationScript()};
     end
@@ -81,7 +84,7 @@ function [td] = simulate( meshes, integrators, h, settings, rigidificators, cont
 
     [mainFig,axesList, initialCamera] = setupWindow2D(settings, meshes, integrators);
 
-    caches = setupCache2D(settings, meshes, rigidificators, comparisons, h);
+    caches = setupCache2D(settings, meshes, rigidificators, comparisons, energyModel, h);
 
     % prep for video generation 
     video = 0;
@@ -232,9 +235,10 @@ function [td] = simulate( meshes, integrators, h, settings, rigidificators, cont
             
             cache.F = mesh2D.B * mesh2D.p;
             
-            [ii, jj, CblockVals, cache.dpsidF] = mexComputeSTVKGradHess2D( cache.F, mesh2D.elA, mesh2D.elMu, mesh2D.elLambda );
-            cache.C = sparse( ii, jj, CblockVals );
-            cache.elasticForces = mesh2D.B' * cache.dpsidF; 
+            energyModel.computeEnergy(mesh2D, cache.F)
+            cache.C = energyModel.derivative2HessianC;
+            cache.dpsidF = energyModel.derivative1Gradient;
+            cache.elasticForces = energyModel.elasticForces; 
             cache.elasticForces(mesh2D.pinnedDOFs) = 0;
 
             td{k}.fullFCForces = toc( startComputeFCForces );

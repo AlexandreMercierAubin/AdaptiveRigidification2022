@@ -32,10 +32,9 @@ mesh2d = fetchPoly2D('bagel.1',false, material,scale,rot,settings);
 m1a = AdaptiveMesh( mesh2d );
 
 
-rigid = EDotMexRigidificator();
+rigid = EDiffMexRigidificator();
 rigid.RigidificationThreshold = 1e-5;
 rigid.ElastificationThreshold = 1e-4; 
-rigid.ScaleByMaxEdgeLength = 0;
 rigid.FrameCount = 3; %number of frames before rigidifying.
 
 integrator = LDLBackwardEuler();

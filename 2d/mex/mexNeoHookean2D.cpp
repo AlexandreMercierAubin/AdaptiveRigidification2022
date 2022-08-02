@@ -29,7 +29,7 @@
 
 #include "mex.h"
 #include "blas.h"
-
+#include <math.h>
 /* 
  * The gateway function
  */
@@ -99,80 +99,77 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] ) {
         double t3 = F1_2*F1_2;
         double t4 = F2_1*F2_1;
         double t5 = F2_2*F2_2;
-        double t6 = F1_1*F1_2;
-        double t7 = F1_1*F2_1;
-        double t8 = F1_2*F2_2;
-        double t9 = F2_1*F2_2;
-        double t12 = F1_1*F2_2*lambda;
-        double t13 = F1_2*F2_1*lambda;
-        double t16 = F1_1*F2_2*mu;
-        double t17 = F1_2*F2_1*mu;
+        double t6 = F1_1*F2_2;
+        double t7 = F1_2*F2_1;
+        double t8 = F1_1*F1_2*lambda;
+        double t9 = F1_1*F2_1*lambda;
+        double t12 = F1_2*F2_2*lambda;
+        double t13 = F2_1*F2_2*lambda;
+        double t14 = 1.0/lambda;
         double t10 = lambda*t6;
         double t11 = lambda*t7;
-        double t14 = lambda*t8;
-        double t15 = lambda*t9;
-        double t18 = t6*2.0;
-        double t19 = t7*2.0;
-        double t20 = t8*2.0;
-        double t21 = t9*2.0;
-        double t22 = t6+t9;
-        double t27 = t12+t17;
-        double t28 = t13+t16;
-        double t29 = t2+t4-1.0;
-        double t30 = t3+t5-1.0;
-        double t23 = t6+t21;
-        double t24 = t7+t20;
-        double t25 = t9+t18;
-        double t26 = t8+t19;
-        double t35 = t27*volume;
-        double t36 = t28*volume;
-        double t43 = t29+t30;
-        double t31 = mu*t23;
-        double t32 = mu*t24;
-        double t33 = mu*t25;
-        double t34 = mu*t26;
-        double t37 = -t35;
-        double t38 = -t36;
-        double t52 = (lambda*t43)/2.0;
-        double t39 = t10+t33;
-        double t40 = t11+t34;
-        double t41 = t14+t32;
-        double t42 = t15+t31;
-        double t44 = t39*volume;
-        double t45 = t40*volume;
-        double t46 = t41*volume;
-        double t47 = t42*volume;
-        double t48 = -t44;
-        double t49 = -t45;
-        double t50 = -t46;
-        double t51 = -t47;
+        double t15 = -t6;
+        double t16 = mu*t14*(3.0/4.0);
+        double t17 = t2+t3+t4+t5+1.0;
+        double t18 = 1.0/t17;
+        double t21 = t7+t15+t16+1.0;
+        double t19 = t18*t18;
+        double t20 = mu*t18;
+        double t23 = lambda*t21;
+        double t22 = -t20;
+        double t24 = F1_1*F1_2*mu*t19*2.0;
+        double t25 = F1_1*F2_1*mu*t19*2.0;
+        double t26 = mu*t6*t19*2.0;
+        double t27 = mu*t7*t19*2.0;
+        double t28 = F1_2*F2_2*mu*t19*2.0;
+        double t29 = F2_1*F2_2*mu*t19*2.0;
+        double t30 = -t23;
+        double t31 = -t24;
+        double t32 = -t25;
+        double t33 = -t28;
+        double t34 = -t29;
+        double t43 = t11+t23+t27;
+        double t45 = t10+t26+t30;
+        double t35 = t8+t34;
+        double t36 = t9+t33;
+        double t37 = t12+t32;
+        double t38 = t13+t31;
+        double t44 = t43*volume;
+        double t46 = t45*volume;
+        double t39 = t35*volume;
+        double t40 = t36*volume;
+        double t41 = t37*volume;
+        double t42 = t38*volume;
+        double t47 = -t44;
+        double t48 = -t46;
         
-        C[i++] = -volume*(t52+lambda*t2+mu*(t2*2.0+t3+t29));
-        C[i++] = t49;
+        C[i++] = -volume*(mu+t22+lambda*t5+mu*t2*t19*2.0);
+        C[i++] = t41;
+        C[i++] = t42;
         C[i++] = t48;
-        C[i++] = t37;
         
-        C[i++] = t49;
-        C[i++] = -volume*(t52+lambda*t4+mu*(t4*2.0+t5+t29));
-        C[i++] = t38;
-        C[i++] = t51;
+        C[i++] = t41;
+        C[i++] = -volume*(mu+t22+lambda*t3+mu*t4*t19*2.0);
+        C[i++] = t47;
+        C[i++] = t39;
+        
+        C[i++] = t42;
+        C[i++] = t47;
+        C[i++] = -volume*(mu+t22+lambda*t4+mu*t3*t19*2.0);
+        C[i++] = t40;
         
         C[i++] = t48;
-        C[i++] = t38;
-        C[i++] = -volume*(t52+lambda*t3+mu*(t2+t3*2.0+t30));
-        C[i++] = t50;
-        
-        C[i++] = t37;
-        C[i++] = t51;
-        C[i++] = t50;
-        C[i++] = -volume*(t52+lambda*t5+mu*(t4+t5*2.0+t30));
-        
+        C[i++] = t39;
+        C[i++] = t40;
+        C[i++] = -volume*(mu+t22+lambda*t2+mu*t5*t19*2.0);
+  
         j -= 4;
-        dpsidF[j++] = -volume*(F1_1*t52+mu*(F1_2*t22+F1_1*t29));
-        dpsidF[j++] = -volume*(F2_1*t52+mu*(F2_2*t22+F2_1*t29));
-        dpsidF[j++] = -volume*(F1_2*t52+mu*(F1_1*t22+F1_2*t30));
-        dpsidF[j++] = -volume*(F2_2*t52+mu*(F2_1*t22+F2_2*t30));
-        psi[el] = (lambda*(t43*t43))/8.0+mu*((t22*t22)/2.0+(t29*t29)/4.0+(t30*t30)/4.0);
+        dpsidF[j++] = volume*(-F1_1*mu+F1_1*t20+F2_2*t23);
+        dpsidF[j++] = -volume*(F2_1*mu+F1_2*t23+F2_1*t22);
+        dpsidF[j++] = -volume*(F1_2*mu+F1_2*t22+F2_1*t23);
+        dpsidF[j++] = volume*(-F2_2*mu+F1_1*t23+F2_2*t20);
+        psi[el] = (t21*t23)/2.0-(mu*log(t17))/2.0+(mu*(t2+t3+t4+t5-2.0))/2.0;
+
     }
     
     i = 0;

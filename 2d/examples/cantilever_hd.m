@@ -58,14 +58,17 @@ mesh2d.pin( find( px < minx + 0.1 ) );
 
 mesha = AdaptiveMesh( mesh2d );
 
-rigid = EDotMexRigidificator();
+rigid = EDiffMexRigidificator();
 rigid.RigidificationThreshold = 1e-6;
 rigid.ElastificationThreshold = 1e-5;
+rigid.PreventPinnedRigidification = true;
 
 integrator = LDLBackwardEuler();
 integrator.Gravity = gravity*0.5;
 integrator.separateQuicksolveGravity = false;
 
-settings.PlotSkip = 3;
+settings.PlotSkip = 5;
 
-td = simulate( {mesh2d, mesha}, integrator, h, settings, rigid );
+energyModel = StVenantKirchoffEnergy();
+
+td = simulate( {mesh2d, mesha}, integrator, h, settings, rigid,NullContactFinder(),NullContactFinder(),NullAnimationScript(), energyModel);

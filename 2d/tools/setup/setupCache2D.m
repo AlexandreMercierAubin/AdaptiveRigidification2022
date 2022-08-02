@@ -1,9 +1,9 @@
-function [caches] = setupCache2D(settings, meshes, rigidificators, comparisons, h)
+function [caches] = setupCache2D(settings, meshes, rigidificators, comparisons, energyModel, h)
     % setupCache2D(settings, meshes, rigidificators, comparisons, h)
     % create the cache for the scene. This includes the precomputation of
     % the A inverse blocks for the quicksolve
 
-    sceneDescriptor = [string(settings.SceneName)+strrep(num2str(h),'.','')];
+    sceneDescriptor = [string(settings.SceneName)+string(energyModel.name)+strrep(num2str(h),'.','')];
     cachedAinvString = ['2d/data/cached/',convertStringsToChars(sceneDescriptor),'Ainv.mat'];
     toRecompute = ~isfile(cachedAinvString) || settings.recomputeCacheAinv;
     if ~toRecompute
@@ -43,7 +43,7 @@ function [caches] = setupCache2D(settings, meshes, rigidificators, comparisons, 
             cache = caches{k};
             cache.oldv = mesh2D.v;
             cache.oldp = mesh2D.p;
-            precomputeAInverseDiagonalBlocks( cache, mesh2D, h );
+            precomputeAInverseDiagonalBlocks( cache, mesh2D, h , energyModel);
 
             %preconditioner for quicksolve
             %compute young's moduli
