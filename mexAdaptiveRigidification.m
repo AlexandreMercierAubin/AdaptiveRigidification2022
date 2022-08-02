@@ -9,6 +9,7 @@ mex -R2018a mexPGS2D.cpp
 mex -R2018a mexPGS2DwithJAinvJT.cpp
 mex -R2018a mexRigidBodyProperties2D.cpp
 mex -R2018a mexRigidConnectedComponents2D.cpp
+mex -R2018a mexNeoHookean2D.cpp
 cd ../..
 cd 3d/mex
 mex -R2018a mexSTVK3D.cpp
