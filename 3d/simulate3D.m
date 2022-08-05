@@ -29,6 +29,13 @@ function td = simulate3D(meshes, h, contactFinders, integrators, rigidificators,
 
     [comparisons, initialMeshes, meshes, integrators, rigidificators] = setupComparisons(meshes, integrators, rigidificators);
 
+    %UI variables TODO: make a UI class so this is clean
+    mouseDown = 0;
+    mousePoint = [nan, nan, nan]; % Current mouse point
+    pullDirection = [nan nan nan];
+    mouseGrabMeshId = nan;  % Grabbed mesh
+    mouseLine = 0;
+
     %create timing data
     td = cell( comparisons, 1 );
     for k = 1:comparisons
@@ -37,6 +44,9 @@ function td = simulate3D(meshes, h, contactFinders, integrators, rigidificators,
     
     [mainFig,axesList, initialCamera] = setupWindow(settings,meshes);
     set(mainFig, 'WindowKeyPressFcn', @onKeyPressed);
+    set(mainFig, 'WindowButtonUpFcn', @onMouseUp);
+    set(mainFig, 'WindowButtonDownFcn', @onMouseDown);
+    set(mainFig, 'WindowButtonMotionFcn',@onMouseDrag);
 
     caches = setupCache(settings, meshes, rigidificators, comparisons, energyModel, h);
     
@@ -279,6 +289,23 @@ function td = simulate3D(meshes, h, contactFinders, integrators, rigidificators,
                 title( axesList(3), 'bodies, rtris, rdofs' );
                 hold ( axesList(3), 'off' );
             end
+
+            % Draw the mouse
+            if ( mouseLine == 0 )
+                mp = [nan,nan,nan];
+                if ~isnan( mouseGrabMeshId )
+                    mp =  mesh3D.p(mouseGrabMeshId*3-2:mouseGrabMeshId*3)';
+                end
+                mouseLine = line( [mp(1), mp(1) + pullDirection(1)], [mp(2), mp(2) + pullDirection(2)], [mp(3), mp(3) + pullDirection(3)]);
+            else
+                mp = [nan,nan,nan];
+                if ~isnan( mouseGrabMeshId )
+                    mp =  mesh3D.p(mouseGrabMeshId*3-2:mouseGrabMeshId*3)';
+                end
+                mouseLine.XData = [mp(1), mp(1) + pullDirection(1)];
+                mouseLine.YData = [mp(2), mp(2) + pullDirection(2)];
+                mouseLine.ZData = [mp(3), mp(3) + pullDirection(3)];
+            end
         end
     end
 
@@ -335,6 +362,11 @@ function td = simulate3D(meshes, h, contactFinders, integrators, rigidificators,
                 shading(axesList(1),'interp'); % interp;
                 lighting(axesList(1),'gouraud'); % gouraud;
             end
+            mouseDown = 0;
+            mousePoint = [nan, nan, nan]; % Current mouse point
+            pullDirection = [nan nan nan];
+            mouseGrabMeshId = nan;  % Grabbed mesh
+            mouseLine = 0;
             disp('Simulation reset');
         elseif strcmp(event.Key, 'p') || strcmp(event.Key, 'space') 
             if running == 1
@@ -366,4 +398,75 @@ function td = simulate3D(meshes, h, contactFinders, integrators, rigidificators,
             notDone = false;
         end        
     end
+
+    function onMouseDrag(~, event)
+        if mouseDown && (~isnan(mouseGrabMeshId))
+            mousePos = get(gca,'CurrentPoint');
+            R = getCameraTransform(gca);
+            mousePoint = R*[mousePos(1,:)]'; %projects the mouse point
+            mousePoint = mousePoint(1:3)';
+
+            pointDOFs = mouseGrabMeshId*3-2:mouseGrabMeshId*3;
+            vertexPointPos = meshes{1}.p(pointDOFs)';
+            pullDirection = (vertexPointPos-mousePoint)';
+            for i2 = 1:comparisons
+                constMultiplyer = 1;
+                if ~meshes{1}.pinned(mouseGrabMeshId)
+                    meshes{i2}.v(pointDOFs) = meshes{i2}.v(pointDOFs) + constMultiplyer * pullDirection;
+                end
+            end
+        end
+    end
+
+    function R = getCameraTransform(figure)
+        camPosition = get(figure, 'CameraPosition'); % camera position
+        camTarget = get(figure, 'CameraTarget'); % where the camera is pointing to
+
+        camDirection = camPosition - camTarget; % camera direction
+        camUp = get(figure, 'CameraUpVector'); % camera 'up' vector
+
+        % build an orthonormal frame based on the viewing direction and the 
+        % up vector (the "view frame")
+        zAxis = camDirection/norm(camDirection);    
+        upAxis = camUp/norm(camUp); 
+        xAxis = cross(upAxis, zAxis);
+        yAxis = cross(zAxis, xAxis);
+
+        R = [xAxis; yAxis; zAxis];
+    end
+
+    function onMouseDown(~, event)
+        %TODO identify triangle and coords
+        % start grabbing and on mouse move apply force
+        % mouse release stop grabbing
+        
+        % Note seems funny that the position is not available from the
+        % argumetns, but this seems to be the way matlab does it!
+        R = getCameraTransform(gca);
+        mousePos = get(gca,'CurrentPoint');
+        mousePoint = R*[mousePos(1,:)]'; %projects the mouse point
+        mousePoint = mousePoint(1:3)'; %only take the first 3 coordinates, no need for w.
+        plot3(mousePoint(1),mousePoint(2),mousePoint(3),'.');
+
+        mouseGrabMeshId = NaN;
+        %Don't need to iterate comparisons as we use the same tet
+        for i2 = 1:comparisons
+            mesh3D = meshes{i2};
+            if ( ~isnan( mouseGrabMeshId ) )
+                continue; % already found something... 
+            end
+
+            P = mesh3D.getPositionFormatted;
+            nearestPointInd = dsearchn(P,mousePoint);
+            mouseGrabMeshId = nearestPointInd;
+            
+        end  
+        mouseDown = 1;
+    end
+
+    function onMouseUp(~, event)
+        mouseDown = 0;
+        mouseGrabMeshId = nan;
+    end
+
 end

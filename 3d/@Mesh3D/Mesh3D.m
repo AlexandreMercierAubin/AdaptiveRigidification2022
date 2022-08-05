@@ -416,6 +416,12 @@ classdef Mesh3D < handle
             mesh.alpha0mass = alpha0vector .* mesh.mass ;
         end
         
+        function x = getPositionFormatted(obj)
+            %Get x in a n x 3 format compatible with most gptoolbox
+            %functions
+            x = reshape(obj.p',3,obj.N)';
+        end
+
         %% public function prototypes
         prepare( obj, infMassForPinned )
         pin( obj, pinnedInds )
