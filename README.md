@@ -1,6 +1,8 @@
 # Adaptive Rigidification project code for Siggraph 2022
 Matlab code for the adaptive rigidification project. This code base provides an implementation of the adaptive rigidification technique as seen at Siggraph 2022. Matlab is intuitive which makes the project easy to setup and results quickly reproducable. To test the various scenes featured in the paper, simply follow the instructions below then open an example file and click play in the editor. Alternatively the name of the example can be called in the command prompt which will launch the simulation. The scenes feature heterogenous materials, multiple objects, scripted animations, surface mapping and more!
 
+The paper and a few useful videos are available on my website https://www.alexandremercieraubin.com/Work/papers/AdaptiveRigidification/.
+
 ## How to use
 
 ### Dependencies
