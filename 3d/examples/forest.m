@@ -173,3 +173,4 @@ animScripted.frameNumbers = 1:entries;
 td = simulate3D({baseMesh,meshes},h,contactFinder, integrator, rigidificator, settings, energyModel, {animScripted});
 save("forest_"+datestr(now,'mm-dd-yyyy_HH-MM')+".mat", 'td');
 writeTDcsv(td, "forest", ["_default","_adaptive"]);
+readTDcsv(["forest_adaptive.csv","forest_default.csv"]);
