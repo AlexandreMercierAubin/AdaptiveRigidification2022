@@ -49,6 +49,10 @@ For instance while being in the root folder, you could open 2d/examples/cantilev
 Why don't you try creating your own scene and play with it?
 
 ### FAQ
+Please do cite the Adaptive Rigidification of Elastic Solids paper if you are using the ideas or code inspired by this simulator. 
+Citations are important for us to obtain funding, and can be used as a proof that our work matters. 
+We are also interested to hear from the companies that wish to use this fully or partially.
+
 If you get a signed-distance error when running the 3D code, then you probably did not set up the compiled mex from gptoolbox properly.
 
 Feel free to contact me if you find bugs and to send pull requests with fixes. 
